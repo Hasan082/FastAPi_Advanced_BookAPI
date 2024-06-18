@@ -28,7 +28,7 @@ The Books Advanced API is a simple RESTful API for managing a collection of book
 
 To start the API server, run the following command:
 ```bash
-uvicorn main:app --reload
+uvicorn books:app --reload
 ```
 Replace `main` with the name of your Python file if it's different.
 
@@ -237,5 +237,3 @@ To test the API, you can use tools like `curl`, Postman, or the FastAPI interact
 # Example to get all books
 curl -X GET "http://127.0.0.1:8000/books" -H "accept: application/json"
 ```
-
-For further API details and examples [Postman API Documentation](https://documenter.getpostman.com/view/7604536/2sA3XSC1vk).
