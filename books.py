@@ -1,3 +1,4 @@
+from typing import Optional
 from fastapi import FastAPI
 from pydantic import BaseModel, Field
 
@@ -20,11 +21,23 @@ class Book:
 
 
 class BookRequest(BaseModel):
-    id: int
+    id: Optional[int] = Field(None, description="Id is not required. It will auto generated")
     title: str = Field(min_length=3, max_length=100)
     author: str = Field(min_length=3, max_length=50)
     description: str = Field(min_length=3, max_length=500)
     rating: float = Field(gt=-1, lt=5.01)
+
+    class Config:
+        json_schema_extra = {
+            "examples": [
+                {
+                    'title': 'Book Title',
+                    'author': 'Author Name',
+                    'description': 'This is an example of a book description.',
+                    'rating': 4.5
+                }
+            ]
+        }
 
 
 BOOKS = [
@@ -52,10 +65,5 @@ async def create_book(book_request: BookRequest):
 
 
 def find_book_id(book: Book):
-    if len(BOOKS) > 0:
-        book.id = BOOKS[-1].id + 1
-    else:
-        book.id = 1
-
+    book.id = 0 if len(BOOKS) == 0 else BOOKS[-1].id + 1
     return book
-
