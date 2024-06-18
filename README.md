@@ -30,7 +30,6 @@ To start the API server, run the following command:
 ```bash
 uvicorn books:app --reload
 ```
-Replace `main` with the name of your Python file if it's different.
 
 ## API Documentation
 
