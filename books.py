@@ -1,5 +1,5 @@
 from typing import Optional
-from fastapi import FastAPI
+from fastapi import FastAPI, Path
 from pydantic import BaseModel, Field
 
 app = FastAPI(title="Books Advanced API by Hasan", version='1.0.0')
@@ -57,7 +57,7 @@ async def read_all_books():
 
 
 @app.get("/books/{book_id}")
-async def read_book(book_id: int):
+async def read_book(book_id: int = Path(gt=0)):
     for book in BOOKS:
         if book.id == book_id:
             return book
@@ -65,7 +65,7 @@ async def read_book(book_id: int):
 
 @app.get("/books/")
 async def read_book_by_rating(book_rating: float):
-    return_all_books_with_rating=[]
+    return_all_books_with_rating = []
     for book in BOOKS:
         if book.rating == book_rating:
             return_all_books_with_rating.append(book)
@@ -86,7 +86,16 @@ def find_book_id(book: Book):
 
 
 @app.put("/books/update_book")
-async def update_book(Book: BookRequest):
+async def update_book(book: BookRequest):
     for i in range(len(BOOKS)):
-        if Book.id == BOOKS[i].id:
-            BOOKS[i] = Book
+        if book.id == BOOKS[i].id:
+            BOOKS[i] = book
+    return {"message": "Book updated successfully", "book": book}
+
+
+@app.delete("/books/{book_id}")
+async def delete_book(book_id: int = Path(gt=0)):
+    for i in range(len(BOOKS)):
+        if BOOKS[i].id == book_id:
+            BOOKS.pop(i)
+            break
